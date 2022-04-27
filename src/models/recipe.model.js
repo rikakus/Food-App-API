@@ -103,7 +103,7 @@ const recipeModel = {
   newRecipe: () => {
     return new Promise((resolve, reject) => {
       db.query(
-        "SELECT * FROM recipe ORDER BY date DESC LIMIT 5",
+        "SELECT * FROM recipe ORDER BY date DESC LIMIT 6",
         (err, res) => {
           if (err) {
             reject(err);
@@ -116,7 +116,7 @@ const recipeModel = {
   recipeUser: (idUser) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT * FROM recipe WHERE user_id=${idUser} LIMIT ${limit} OFFSET ${offset}`,
+        `SELECT * FROM recipe WHERE user_id=${idUser}`,
         (err, res) => {
           if (err) {
             reject(err);

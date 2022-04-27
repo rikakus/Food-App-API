@@ -8,7 +8,7 @@ const upload = require('../middleware/upload');
 const { validate, userValidationRules } = require('../middleware/validation');
 router
   .get('/newusers', jwtAuth, isCustomer, list)
-  .post('/auth', upload,userValidationRules(), validate, register)
+  .post('/register', upload,userValidationRules(), validate, register)
   .post('/login', login);
 
 module.exports = router;

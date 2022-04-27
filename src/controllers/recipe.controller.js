@@ -7,7 +7,7 @@ const recipeController = {
       const search = req.query.search ? req.query.search : str;
       const { page, limit } = req.query;
       const pageValue = page ? Number(page) : 1;
-      const limitValue = limit ? Number(limit) : 3;
+      const limitValue = limit ? Number(limit) : 10;
       const offset = (pageValue - 1) * limitValue;
       let allData;
 
@@ -269,6 +269,16 @@ const recipeController = {
     } catch (err) {
       failed(res, err.message, "failed", "failed to deactive recipe");
     }
+  },
+  recipe: (idUser) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM recipe WHERE user_id=${idUser}`, (err, res) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(res);
+      });
+    });
   },
 };
 module.exports = recipeController;

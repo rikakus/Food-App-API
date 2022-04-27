@@ -15,7 +15,7 @@ const multerUpload = multer({
   }),
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    if (ext === ".jpg" || ext === ".png" || ext === ".mp4") {
+    if (ext === ".jpg" || ext === ".png") {
       cb(null, true);
     } else {
       const error = {
@@ -25,8 +25,8 @@ const multerUpload = multer({
     }
   },
   limits: {
-    files: 1, // allow only 1 file per request
-    fileSize: 2048 * 2048, // 1 MB (max file size)
+    files: 1,
+    fileSize: (1024 * 1024) * 2, 
   },
 });
 
