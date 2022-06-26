@@ -24,7 +24,7 @@ router
   .get("/recipe", jwtAuth, list)
   .get("/recipe/:id", jwtAuth, detail)
   .post("/recipe", jwtAuth, upload, recipeValidatorRules(), validate, input)
-  .put("/recipe/:id", jwtAuth, update)
+  .put("/recipe/:id", jwtAuth, upload, update)
   .delete("/recipe/:id", jwtAuth, deleted)
   .get("/public", jwtAuth, public)
   .get("/recipe-user/:id", jwtAuth, recipe)

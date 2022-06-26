@@ -65,8 +65,8 @@ const recipeModel = {
       const { id, photo, title, ingredients, video, date, idUser, isActive } =
         data;
       db.query(
-        `INSERT INTO recipe(id, photo, title, ingredients, video, date, user_Id, is_active) 
-        VALUES (${id}, '${photo}', '${title}','${ingredients}', '${video}', '${date}', '${idUser}',${isActive})`,
+        `INSERT INTO recipe( photo, title, ingredients, video, date, user_Id, is_active) 
+        VALUES ('${photo}', '${title}','${ingredients}', '${video}', '${date}', '${idUser}',${isActive})`,
         (err, res) => {
           if (err) {
             reject(err);
@@ -76,10 +76,10 @@ const recipeModel = {
       );
     });
   },
-  updateRecipe: (id, photo, title, ingredients, video, date, idUser) => {
+  updateRecipe: (id, file, title, ingredients, video, date, idUser) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `UPDATE recipe SET photo='${photo}', title='${title}',ingredients='${ingredients}'
+        `UPDATE recipe SET photo='${file}', title='${title}',ingredients='${ingredients}'
             , video='${video}', date='${date}', user_id='${idUser}' WHERE id=${id}`,
         (err, res) => {
           if (err) {
