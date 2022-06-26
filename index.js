@@ -7,7 +7,7 @@ const cors = require('cors');
 require('dotenv');
 const path = require('path');
 
-const APP_PORT = process.env.PORT | 3000;
+const PORT = process.env.PORT | 3000;
 app.use((req, res, next) => {
   res.header('Cross-Origin-Resource-Policy', 'cross-origin');
   next();
@@ -19,12 +19,6 @@ const recipeRoute = require('./src/route/recipe.route');
 const commentRoute = require('./src/route/comment.route');
 const authRoute = require('./src/route/auth.route');
 
-app.use(
-  cors({
-    origin: '*'
-  })
-);
-
 app.use(bodyParser.json());
 app.use(xss());
 app.use(helmet());
@@ -33,6 +27,12 @@ app.use(recipeRoute);
 app.use(commentRoute);
 app.use(authRoute);
 
-app.listen(APP_PORT, () => {
-  console.log(`service running on PORT ${APP_PORT}`);
+app.use(
+  cors({
+    origin: '*'
+  })
+);
+
+app.listen(PORT, () => {
+  console.log('service running on PORT 3000');
 });
