@@ -7,7 +7,7 @@ const recipeController = {
       const search = req.query.search ? req.query.search : str;
       const { page, limit } = req.query;
       const pageValue = page ? Number(page) : 1;
-      const limitValue = limit ? Number(limit) : 3;
+      const limitValue = limit ? Number(limit) : 1000;
       const offset = (pageValue - 1) * limitValue;
       let allData;
 
@@ -112,7 +112,7 @@ const recipeController = {
       const body = req.body;
       const file = req.file.filename;
       const { id, photo, title, ingredients, video, date, idUser, isActive } = body;
-      if (!id || !title || !ingredients || !video || !date || !idUser ) {
+      if (!title || !ingredients || !video || !date || !idUser ) {
         throw Error("parameter cannot blank");
       } else if (req.APP_DATA.tokenDecode.id != idUser) {
         return failed(
@@ -147,7 +147,8 @@ const recipeController = {
   update: async (req, res) => {
     try {
       const id = req.params.id;
-      const { photo, title, ingredients, video, date, idUser } = req.body;
+      const file = req.file.filename;
+      const {  title, ingredients, video, date, idUser } = req.body;
       const check = parseInt(id);
       const getData = await recipeModel.detailRecipe(id);
       const checkId = getData.rows[0].user_id;
@@ -164,7 +165,7 @@ const recipeController = {
         );
       }
       recipeModel
-        .updateRecipe(id, photo, title, ingredients, video, date, idUser)
+        .updateRecipe(id, file, title, ingredients, video, date, idUser)
         .then((result) => {
           success(res, result.command, "success", "success to update recipe");
         })
@@ -268,6 +269,25 @@ const recipeController = {
         });
     } catch (err) {
       failed(res, err.message, "failed", "failed to deactive recipe");
+    }
+  },
+  recipe: (req, res) => {
+    try {
+      const idUser = req.params.id;
+      const check = parseInt(idUser);
+      if (isNaN(check) == true) {
+        throw Error("input must be a number");
+      }
+      recipeModel
+        .recipeUser(idUser)
+        .then((result) => {
+          success(res, result.rows, "success", "success to get recipe");
+        })
+        .catch((err) => {
+          failed(res, err.message, "failed", "failed to get recipe");
+        });
+    } catch (err) {
+      failed(res, err.message, "failed", "failed to get recipe");
     }
   },
 };

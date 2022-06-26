@@ -3,10 +3,10 @@ const db = require("../config/db");
 const authModel = {
   inputAuth: (data) => {
     return new Promise((resolve, reject) => {
-      const { id, photo, name, email, phone, password, level, isActive } = data;
+      const { photo, name, email, phone, password, level, isActive } = data;
       db.query(
-        `INSERT INTO users(id, photo, name, email, phone, password, level, is_active) 
-            VALUES (${id}, '${photo}', '${name}','${email}', '${phone}', '${password}',${level},${isActive})`,
+        `INSERT INTO users(photo, name, email, phone, password, level, is_active) 
+            VALUES ('${photo}', '${name}','${email}', '${phone}', '${password}',${level},${isActive})`,
         (err, res) => {
           if (err) {
             reject(err);
