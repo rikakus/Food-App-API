@@ -34,5 +34,5 @@ app.use(
 );
 
 app.listen(PORT, () => {
-  console.log('service running on PORT 3000');
+  console.log(`service running on PORT ${PORT}`);
 });

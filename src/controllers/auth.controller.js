@@ -1,7 +1,8 @@
-const authModel = require("../models/auth.model"); // import authModel dari folder model
-const { success, failed } = require("../helpers/response"); // import response dari folder helper
-const bcrypt = require("bcrypt"); // import package bcrypt
-const jwtToken = require("../helpers/generateJwtToken");
+/* eslint-disable eqeqeq */
+const authModel = require('../models/auth.model'); // import authModel dari folder model
+const { success, failed } = require('../helpers/response'); // import response dari folder helper
+const bcrypt = require('bcrypt'); // import package bcrypt
+const jwtToken = require('../helpers/generateJwtToken');
 
 module.exports = {
   register: async (req, res) => {
@@ -9,12 +10,12 @@ module.exports = {
     try {
       // buat try untuk pengecekan ada error
       const file = req.file.filename;
-      const { name, photo, email, phone, password, level, isActive } = req.body; // destructive body
+      const { name, email, phone, password, level, isActive } = req.body; // destructive body
       bcrypt.hash(password, 10, (err, hash) => {
         // ubah password jadi hash dengan bcrypt.hash(password kamu, default 10, cb (err,hash)=>{})
         if (err) {
           // cek jika err
-          failed(res, err.message, "failed", "failed hash password"); // tampilan jika err
+          failed(res, err.message, 'failed', 'failed hash password'); // tampilan jika err
         }
         const data = {
           // buat variabel menyimpan parameter dan
@@ -24,22 +25,22 @@ module.exports = {
           phone,
           password: hash,
           level, // mengganti password dengan hash
-          isActive,
+          isActive
         };
         authModel
           .inputAuth(data) // panggil fungsi dengan parameter yang sudah ganti di model
           .then((result) => {
             // menangkap resolve dari model
-            success(res, result, "success", "success to register"); // tampilan resolve
+            success(res, result, 'success', 'success to register'); // tampilan resolve
           })
           .catch((err) => {
             // menangkap reject dari model
-            failed(res, err.message, "failed", "failed to register"); // tampilan reject
+            failed(res, err.message, 'failed', 'failed to register'); // tampilan reject
           });
       });
     } catch (err) {
       // tangkap hasil dari try jika ada error
-      failed(res, err.message, "failed", "internal server error"); // tampilan error
+      failed(res, err.message, 'failed', 'internal server error'); // tampilan error
     }
   },
   //   login: async (req, res) => {
@@ -86,7 +87,7 @@ module.exports = {
         .then((result) => {
           // menangkap resolve dari model
           if (result.rows[0].is_active == 0) {
-            throw Error("your account get suspend please contact admin");
+            throw Error('your account get suspend please contact admin');
           } else if (result.rowCount > 0) {
             // cek hasil rowcount > 0
             bcrypt
@@ -99,24 +100,24 @@ module.exports = {
                   const tokenData = { id, name, email, level };
 
                   const token = await jwtToken(tokenData);
-                  success(res, token, result.rows[0], "login success"); // jika result success
+                  success(res, token, result.rows[0], 'login success'); // jika result success
                 } else {
                   // jika result failed
-                  failed(res, "error", "failed", "email or password is wrong");
+                  failed(res, 'error', 'failed', 'email or password is wrong');
                 }
               });
           } else {
             // jika rowcount lebih kecil dari 0 atau 0
-            failed(res, "error", "failed", "email or password is wrong");
+            failed(res, 'error', 'failed', 'email or password is wrong');
           }
         })
         .catch((err) => {
           // menangkap reject dari model
-          failed(res, err.message, "failed", "login failed"); // menampilkan message
+          failed(res, err.message, 'failed', 'login failed'); // menampilkan message
         });
     } catch (err) {
       // tangkap hasil dari try jika ada error
-      failed(res, err.message, "failed", "internal server error"); // tampilan error
+      failed(res, err.message, 'failed', 'internal server error'); // tampilan error
     }
   },
   list: (req, res) => {
@@ -128,13 +129,13 @@ module.exports = {
       authModel
         .listAll(limitValue, offset)
         .then((result) => {
-          success(res, result.rows, "success", "login success");
+          success(res, result.rows, 'success', 'login success');
         })
         .catch((err) => {
-          failed(res, err.message, "failed", "internal server error");
+          failed(res, err.message, 'failed', 'internal server error');
         });
     } catch (err) {
-      failed(res, err.message, "failed", "internal server error");
+      failed(res, err.message, 'failed', 'internal server error');
     }
-  },
+  }
 };

@@ -1,9 +1,10 @@
-const recipeModel = require("../models/recipe.model");
-const { success, failed } = require("../helpers/response");
+/* eslint-disable eqeqeq */
+const recipeModel = require('../models/recipe.model');
+const { success, failed } = require('../helpers/response');
 const recipeController = {
   list: async (req, res) => {
     try {
-      const str = "";
+      const str = '';
       const search = req.query.search ? req.query.search : str;
       const { page, limit } = req.query;
       const pageValue = page ? Number(page) : 1;
@@ -11,7 +12,7 @@ const recipeController = {
       const offset = (pageValue - 1) * limitValue;
       let allData;
 
-      //admin
+      // admin
       if (req.APP_DATA.tokenDecode.level == 0) {
         allData = await recipeModel.allDataAdmin();
         const totalData = Number(allData.rows[0].total);
@@ -21,29 +22,29 @@ const recipeController = {
             const pagination = {
               currentPage: pageValue,
               dataPerPage: limitValue,
-              totalPage: Math.ceil(totalData / limitValue),
+              totalPage: Math.ceil(totalData / limitValue)
             };
             if (result.rowCount === 0) {
               return failed(
                 res,
-                "failed to get data",
-                "failed",
-                "data not found"
+                'failed to get data',
+                'failed',
+                'data not found'
               );
             }
             success(
               res,
               result.rows,
-              "success",
-              "success to get data",
+              'success',
+              'success to get data',
               pagination
             );
           })
           .catch((err) => {
-            failed(res, err.message, "failed", "failed to get data");
+            failed(res, err.message, 'failed', 'failed to get data');
           });
 
-        //customer
+        // customer
       } else if (req.APP_DATA.tokenDecode.level == 1) {
         const id = req.APP_DATA.tokenDecode.id;
         allData = await recipeModel.recipeUser(id, 1000, 0);
@@ -54,30 +55,30 @@ const recipeController = {
             const pagination = {
               currentPage: pageValue,
               dataPerPage: limitValue,
-              totalPage: Math.ceil(totalData / limitValue),
+              totalPage: Math.ceil(totalData / limitValue)
             };
             if (result.rowCount === 0) {
               return failed(
                 res,
-                "failed to get data",
-                "failed",
-                "data not found"
+                'failed to get data',
+                'failed',
+                'data not found'
               );
             }
             success(
               res,
               result.rows,
-              "success",
-              "success to get data",
+              'success',
+              'success to get data',
               pagination
             );
           })
           .catch((err) => {
-            failed(res, err.message, "failed", "failed to get data");
+            failed(res, err.message, 'failed', 'failed to get data');
           });
       }
     } catch (err) {
-      failed(res, err.message, "failed", "failed to get data");
+      failed(res, err.message, 'failed', 'failed to get data');
     }
   },
   detail: (req, res) => {
@@ -85,7 +86,7 @@ const recipeController = {
       const id = req.params.id;
       const check = parseInt(id);
       if (isNaN(check)) {
-        throw Error("input must be a number");
+        throw Error('input must be a number');
       }
       recipeModel
         .detailRecipe(id)
@@ -93,33 +94,33 @@ const recipeController = {
           if (result.rowCount === 0) {
             return failed(
               res,
-              "failed to get data",
-              "failed",
-              "data not found"
+              'failed to get data',
+              'failed',
+              'data not found'
             );
           }
-          success(res, result.rows[0], "success", "success to delete recipe");
+          success(res, result.rows[0], 'success', 'success to delete recipe');
         })
         .catch((err) => {
-          failed(res, err.message, "failed", "failed to get detail");
+          failed(res, err.message, 'failed', 'failed to get detail');
         });
     } catch (err) {
-      failed(res, err.message, "failed", "failed to get detail");
+      failed(res, err.message, 'failed', 'failed to get detail');
     }
   },
   input: async (req, res) => {
     try {
       const body = req.body;
       const file = req.file.filename;
-      const { id, photo, title, ingredients, video, date, idUser, isActive } = body;
-      if (!title || !ingredients || !video || !date || !idUser ) {
-        throw Error("parameter cannot blank");
+      const { id, title, ingredients, video, date, idUser, isActive } = body;
+      if (!title || !ingredients || !video || !date || !idUser) {
+        throw Error('parameter cannot blank');
       } else if (req.APP_DATA.tokenDecode.id != idUser) {
         return failed(
           res,
-          "forbidden access",
-          "failed",
-          "failed to input recipe"
+          'forbidden access',
+          'failed',
+          'failed to input recipe'
         );
       }
       const data = {
@@ -130,50 +131,50 @@ const recipeController = {
         video,
         date,
         idUser,
-        isActive,
+        isActive
       };
       recipeModel
         .inputRecipe(data)
         .then((result) => {
-          success(res, result.command, "success", "success to input recipe");
+          success(res, result.command, 'success', 'success to input recipe');
         })
         .catch((err) => {
-          failed(res, err.message, "failed", "failed to input recipe");
+          failed(res, err.message, 'failed', 'failed to input recipe');
         });
     } catch (err) {
-      failed(res, err.message, "failed", "failed to input recipe");
+      failed(res, err.message, 'failed', 'failed to input recipe');
     }
   },
   update: async (req, res) => {
     try {
       const id = req.params.id;
       const file = req.file.filename;
-      const {  title, ingredients, video, date, idUser } = req.body;
+      const { title, ingredients, video, date, idUser } = req.body;
       const check = parseInt(id);
       const getData = await recipeModel.detailRecipe(id);
       const checkId = getData.rows[0].user_id;
       if (isNaN(check)) {
-        throw Error("input must be a number");
+        throw Error('input must be a number');
       } else if (!title || !ingredients || !video || !date || !idUser) {
-        throw Error("parameter cannot blank");
+        throw Error('parameter cannot blank');
       } else if (req.APP_DATA.tokenDecode.id != idUser || idUser != checkId) {
         return failed(
           res,
-          "forbidden access",
-          "failed",
-          "failed to update recipe"
+          'forbidden access',
+          'failed',
+          'failed to update recipe'
         );
       }
       recipeModel
         .updateRecipe(id, file, title, ingredients, video, date, idUser)
         .then((result) => {
-          success(res, result.command, "success", "success to update recipe");
+          success(res, result.command, 'success', 'success to update recipe');
         })
         .catch((err) => {
-          failed(res, err.message, "failed", "failed to update recipe");
+          failed(res, err.message, 'failed', 'failed to update recipe');
         });
     } catch (err) {
-      failed(res, err.message, "failed", "failed to update recipe");
+      failed(res, err.message, 'failed', 'failed to update recipe');
     }
   },
   deleted: async (req, res) => {
@@ -183,25 +184,25 @@ const recipeController = {
       const getData = await recipeModel.detailRecipe(id);
       const checkId = getData.rows[0].user_id;
       if (isNaN(check)) {
-        throw Error("input must be a number");
+        throw Error('input must be a number');
       } else if (req.APP_DATA.tokenDecode.id !== checkId) {
         return failed(
           res,
-          "forbidden access",
-          "failed",
-          "failed to input recipe"
+          'forbidden access',
+          'failed',
+          'failed to input recipe'
         );
       }
       recipeModel
         .deleteRecipe(id)
         .then((result) => {
-          success(res, result.command, "success", "success to delete recipe");
+          success(res, result.command, 'success', 'success to delete recipe');
         })
         .catch((err) => {
-          failed(res, err.message, "failed", "failed to delete recipe");
+          failed(res, err.message, 'failed', 'failed to delete recipe');
         });
     } catch (err) {
-      failed(res, err.message, "failed", "failed to delete recipe");
+      failed(res, err.message, 'failed', 'failed to delete recipe');
     }
   },
   news: (req, res) => {
@@ -209,16 +210,16 @@ const recipeController = {
       recipeModel
         .newRecipe()
         .then((result) => {
-          success(res, result.rows, "success", "success to get new recipe");
+          success(res, result.rows, 'success', 'success to get new recipe');
         })
         .catch((err) => {
-          failed(res, err.message, "failed", "failed to get new recipe");
+          failed(res, err.message, 'failed', 'failed to get new recipe');
         });
     } catch (err) {
-      failed(res, err.message, "failed", "failed to get new recipe");
+      failed(res, err.message, 'failed', 'failed to get new recipe');
     }
   },
-  public: async (req, res) => {
+  publicc: async (req, res) => {
     try {
       const { page, limit } = req.query;
       const pageValue = page ? Number(page) : 1;
@@ -232,21 +233,21 @@ const recipeController = {
           const pagination = {
             currentPage: pageValue,
             dataPerPage: limitValue,
-            totalPage: Math.ceil(totalData / limitValue),
+            totalPage: Math.ceil(totalData / limitValue)
           };
           success(
             res,
             result.rows,
-            "success",
-            "success to get recipe",
+            'success',
+            'success to get recipe',
             pagination
           );
         })
         .catch((err) => {
-          failed(res, err.message, "failed", "failed to get recipe");
+          failed(res, err.message, 'failed', 'failed to get recipe');
         });
     } catch (err) {
-      failed(res, err.message, "failed", "failed to get recipe");
+      failed(res, err.message, 'failed', 'failed to get recipe');
     }
   },
   recipeControl: (req, res) => {
@@ -255,20 +256,20 @@ const recipeController = {
       const isActive = Number(req.query.isActive);
       const check = parseInt(id);
       if (isNaN(check)) {
-        throw Error("input must be a number");
-      }else if ( isActive != 0) {
-        throw Error("parameter must be 0");
+        throw Error('input must be a number');
+      } else if (isActive != 0) {
+        throw Error('parameter must be 0');
       }
       recipeModel
-        .RecipeControl(id,isActive)
+        .RecipeControl(id, isActive)
         .then((result) => {
-          success(res, result.command, "success", "success to deactive recipe");
+          success(res, result.command, 'success', 'success to deactive recipe');
         })
         .catch((err) => {
-          failed(res, err.message, "failed", "failed to deactive recipe");
+          failed(res, err.message, 'failed', 'failed to deactive recipe');
         });
     } catch (err) {
-      failed(res, err.message, "failed", "failed to deactive recipe");
+      failed(res, err.message, 'failed', 'failed to deactive recipe');
     }
   },
   recipe: (req, res) => {
@@ -276,19 +277,19 @@ const recipeController = {
       const idUser = req.params.id;
       const check = parseInt(idUser);
       if (isNaN(check) == true) {
-        throw Error("input must be a number");
+        throw Error('input must be a number');
       }
       recipeModel
         .recipeUser(idUser)
         .then((result) => {
-          success(res, result.rows, "success", "success to get recipe");
+          success(res, result.rows, 'success', 'success to get recipe');
         })
         .catch((err) => {
-          failed(res, err.message, "failed", "failed to get recipe");
+          failed(res, err.message, 'failed', 'failed to get recipe');
         });
     } catch (err) {
-      failed(res, err.message, "failed", "failed to get recipe");
+      failed(res, err.message, 'failed', 'failed to get recipe');
     }
-  },
+  }
 };
 module.exports = recipeController;
