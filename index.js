@@ -14,6 +14,10 @@ app.use((req, res, next) => {
 });
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/', (req, res) =>
+  res.send('APP ON BOARD')
+);
+
 const usersRoute = require('./src/route/users.route');
 const recipeRoute = require('./src/route/recipe.route');
 const commentRoute = require('./src/route/comment.route');
