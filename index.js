@@ -37,6 +37,6 @@ app.use(
   })
 );
 
-app.listen(PORT, () => {
+app.listen(PORT || 3000, () => {
   console.log(`service running on PORT ${PORT}`);
 });

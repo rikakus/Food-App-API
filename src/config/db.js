@@ -8,6 +8,11 @@ const config = {
   database: process.env.DB_NAME,
   port: process.env.DB_PORT | 5432
 };
+if (process.env.NODE_ENV === 'development') {
+  config.ssl = {
+    rejectUnauthorized: false
+  };
+}
 if (process.env.NODE_ENV === 'production') {
   config.ssl = {
     rejectUnauthorized: true
