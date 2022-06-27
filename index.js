@@ -7,7 +7,7 @@ const cors = require('cors');
 require('dotenv');
 const path = require('path');
 
-const PORT = process.env.PORT | 3000;
+const PORT = process.env.PORT || 3000;
 app.use((req, res, next) => {
   res.header('Cross-Origin-Resource-Policy', 'cross-origin');
   next();
@@ -37,6 +37,6 @@ app.use(
   })
 );
 
-app.listen(PORT || 3000, () => {
+app.listen(PORT, () => {
   console.log(`service running on PORT ${PORT}`);
 });
