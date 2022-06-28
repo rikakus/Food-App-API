@@ -14,9 +14,7 @@ app.use((req, res, next) => {
 });
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) =>
-  res.send('APP ON BOARD')
-);
+app.get('/', (req, res) => res.send('APP ON BOARD'));
 
 const usersRoute = require('./src/route/users.route');
 const recipeRoute = require('./src/route/recipe.route');
@@ -25,17 +23,17 @@ const authRoute = require('./src/route/auth.route');
 
 app.use(bodyParser.json());
 app.use(xss());
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: false
+  })
+);
+app.use(cors());
 app.use(usersRoute);
 app.use(recipeRoute);
 app.use(commentRoute);
 app.use(authRoute);
-
-app.use(
-  cors({
-    origin: '*'
-  })
-);
 
 app.listen(PORT, () => {
   console.log(`service running on PORT ${PORT}`);
